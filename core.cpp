@@ -17,7 +17,8 @@ bool Core::event(QEvent *event)
 void Core::cycleStep()
 {
     cycl.NStep++;
-    qDebug() << "cycle value = " <<  cycl.NStep;
+//    qDebug() << "cycle value = " <<  cycl.NStep;
+    emit cycleChanged(cycl.NStep);
 }
 
 Core::Core(int argc, char *argv[]) :
