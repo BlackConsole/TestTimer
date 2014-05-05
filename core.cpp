@@ -2,45 +2,62 @@
 
 void Core::timerEvent(QTimerEvent *event)
 {
-    if (event->timerId() == idTimer){
-        time++;
-        qDebug() << time << endl;
+    if (event->timerId() == cycl.id){
+        cycleStep();
     }
 }
 
 bool Core::event(QEvent *event)
 {
-    if (event->type() == 1)
+    //if (event->type() == 1)
     QApplication::event(event);
+    return 0;
+}
+
+void Core::cycleStep()
+{
+    cycl.NStep++;
+    qDebug() << "cycle value = " <<  cycl.NStep;
 }
 
 Core::Core(int argc, char *argv[]) :
     QApplication(argc, argv)
 {
-    idTimer = 0;
-    time = 0;
+    cycl.id = 0;
+    cycl.interval = 0;
+    cycl.NStep = 0;
+    cycl.stat = false;
 }
 
-void Core::timerStart()
+void Core::cycleStart(int interval_time)
 {
-    idTimer = startTimer(1000);
-    emit timerStat(true);
+    cycl.id = startTimer(interval_time);
+    cycl.interval = interval_time;
+    cycl.stat = true;
+    emit cycleStat(true);
 }
 
-void Core::timerStop()
+void Core::cycleStop()
 {
-    QObject::killTimer(idTimer);
-    emit timerStat(false);
+    killTimer(cycl.id);
+    cycl.id = 0;
+    cycl.stat = false;
+    emit cycleStat(false);
 }
 
-void Core::timerReset()
+void Core::cycleReset()
 {
-    time = 0;
+    cycl.NStep = 0;
 }
 
-void Core::timerGetTime()
+void Core::cycleGetValue()
 {
-    emit timerTime(time);
+    emit cycleValue(cycl.NStep);
+}
+
+void Core::cycleGetStat()
+{
+    emit cycleStat(cycl.stat);
 }
 
 
