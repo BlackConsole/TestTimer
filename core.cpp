@@ -10,8 +10,8 @@ void Core::timerEvent(QTimerEvent *event)
 bool Core::event(QEvent *event)
 {
     //if (event->type() == 1)
-    QApplication::event(event);
-    return 0;
+
+    return QApplication::event(event);
 }
 
 void Core::cycleStep()

@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     a.cycleStart(1);
     MainWindow w;
     w.show();
+//    a.set
 //    console cons;
 //    QThread tr;
 //    cons.moveToThread(&tr);
