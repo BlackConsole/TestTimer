@@ -26,6 +26,7 @@ public:
 signals:
     void cycleStat(bool);
     void cycleValue(int);
+    void cycleChanged(int);
 
 public slots:
     void cycleStart(int t = 0);
