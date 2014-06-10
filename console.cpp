@@ -3,18 +3,18 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 
+#include <QDebug>
 using namespace std;
 
 
 Console::Console(QObject *parent) :
-    QObject(parent)
+    QObject(parent),fCC(0)
 {
     ConsoleMode=0;
-    initscr();
+
+//    initscr();
 
     //printw("Black console organization 2014\nLord!!!");
-
-
 }
 
 Console::~Console()
@@ -47,7 +47,8 @@ void Console::execut()
 
 void Console::process()
 {
-
+    printf("hohohoh\n");
+    return;
     hello_scr();
 
     move(0,0);
@@ -57,13 +58,20 @@ void Console::process()
 //    nonl(); //не переносить строку
     noecho();
     keypad(stdscr, TRUE);
-
+    echochar('@');
+    QString StrIn(500);
+    QString StrOut(500);
+    fCC=new ConsoleControl(this);
+    fCC->s_in.setString(&StrIn);
+    fCC->s_out.setString(&StrOut);
+    echochar('&');
     int n=0;
     while(1)
     {
     int i=0;
     int ch;
     char buf[100];
+
     printw("Lord[%d] >> ",n++);
     while ((ch=getch())!=10)
     {
@@ -86,43 +94,20 @@ void Console::process()
     echochar('\n');
     if (ch==10 && buf[0]!=0)
     {
-        printw("42! ");
-        printw(buf);
-        echochar('\n');
+        //parse commands
+        fCC->s_in<<buf;
+        fCC->ParseAll();
+        //echochar('\n');
     }
+    QString line;
+
+    while(!fCC->s_out.atEnd()){
+        line=fCC->s_out.readLine();
+        printw(qPrintable(line));
+        echochar('\n');
+      }
     refresh();
     }
-    /*
-    for(int i=0;i<100;i++)
-    {
-        char buf[100];
-        char st;
-        printw("Lord[] >> "); // вывод строки
-        refresh(); // обновить
-        for(int ii=0;ii<100;ii++)
-        {
-            st = 0;
-            st = getch();
-            printw(&st);
-            if (st=='l' || st=='o' || st=='r' || st=='d')
-            {
-                //strcat(buf,&st);
-                beep();
-//                printw(&st);
-            }
-            if (st==KEY_ENTER || st=='\n')
-            {
-//                printw("lord[] >> ");
-                //printw(buf);
-//                printw("\n");
-                beep();
-                break;
-            }
-        }
-//        if (st=='l') printw("up\n");
-//        else printw("42\n");
-    }
-    */
 }
 
 void Console::stop()

@@ -6,12 +6,15 @@
 #include <stdio.h>
 #include <ncurses.h>
 
+#include "consolecontrol.h"
+
 
 class Console : public QObject
 {
     Q_OBJECT
 
 private:
+    ConsoleControl *fCC;
     int ConsoleMode;
     void hello_scr();
 

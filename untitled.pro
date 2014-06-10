@@ -15,14 +15,14 @@ LIBS += -lncurses
 
 SOURCES += main.cpp \
         mainwindow.cpp \
-#        consolecontrol.cpp \
-#        consolecommand.cpp \
+        consolecontrol.cpp \
+        consolecommand.cpp \
     core.cpp \
     console.cpp
 
 HEADERS  += mainwindow.h \
-#        consolecontrol.h \
-#        consolecommand.h \
+        consolecontrol.h \
+        consolecommand.h \
     core.h \
     console.h
 

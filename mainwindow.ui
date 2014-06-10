@@ -14,13 +14,13 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
       <width>341</width>
-      <height>90</height>
+      <height>91</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -30,16 +30,16 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="okButton">
+        <widget class="QPushButton" name="notokButton">
          <property name="text">
-          <string>OkButton</string>
+          <string>NotOkButton</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="notokButton">
+        <widget class="QPushButton" name="okButton">
          <property name="text">
-          <string>NotOkButton</string>
+          <string>OkButton</string>
          </property>
         </widget>
        </item>
@@ -57,7 +57,7 @@
      <x>0</x>
      <y>0</y>
      <width>345</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

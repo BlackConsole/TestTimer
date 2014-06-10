@@ -3,10 +3,9 @@
 #include "consolecontrol.h"
 
 ConsoleControl::ConsoleControl(QObject *parent) :
-  QThread(parent),s_in(stdin),s_out(stdout)
+  QObject(parent)/*,s_in(""),s_out("")*/
 {
-  loop_running=false;
-  Say("Hi!!\n");
+ // Say("Hi!!\n");
 
 
   AddCommand("help","List all commands");
@@ -15,7 +14,7 @@ ConsoleControl::ConsoleControl(QObject *parent) :
 
   connect(commands["help"],SIGNAL(run(QString)),this,SLOT(ListCommands()));
   connect(commands["say"], SIGNAL(run(QString)),this,SLOT(Say(QString)));
-  connect(commands["exit"],SIGNAL(run(QString)),this,SLOT(StopLoop()));
+//  connect(commands["exit"],SIGNAL(run(QString)),this,SLOT(StopLoop()));
 
 //  StartLoop();
 }
@@ -30,28 +29,25 @@ void ConsoleControl::Flush(){
 }
 
 void ConsoleControl::Say(QString what){
-  s_out<<"[[CControl]]:"<<what<<"\n";
-  Flush();
+  s_out<<what<<"\n";
+  s_out.flush();
+  emit hasWritten();
 }
 
-QString ConsoleControl::Ask(QString what){
-  s_out<<what+":";
-  Flush();
-  QString res=s_in.readLine();
-  return res;
-}
-
-void ConsoleControl::Loop(){
-  Flush();
-  QString line = Ask("Enter command [\"help\" for list of commands]");
-  if(line.isEmpty())return;
+bool ConsoleControl::ParseLine(QString line){
+  if(line.isEmpty())return false;
   QString cmd=line.section(QRegExp("\\s+"),0, 0,QString::SectionSkipEmpty);
   QString arg=line.section(QRegExp("\\s+"),1,-1,QString::SectionSkipEmpty);
-//  Say("cmd="+cmd+", arg="+arg);
   if(commands.contains(cmd))
     commands.value(cmd)->Run(arg);
-  else Say("Command \""+cmd+"\" not reconginzed!!!! Panic!!!!11\n");
-  usleep(100);
+  else Say("Command \""+cmd+"\" not reconginzed!!!! Panic!\n");
+
+  return true;
+}
+
+void ConsoleControl::ParseAll(){
+  while(ParseLine(s_in.readLine())){  };
+  emit hasRead();
 }
 
 ConsoleCommand *ConsoleControl::AddCommand(QString key, QString desc)
@@ -60,21 +56,13 @@ ConsoleCommand *ConsoleControl::AddCommand(QString key, QString desc)
   return commands[key];
 }
 
-void ConsoleControl::StartLoop(){
-  loop_running=true;
-  while(loop_running) Loop();
-//  this->terminate();
-}
-
-void ConsoleControl::StopLoop(){
-  loop_running=false;
-}
-
 void ConsoleControl::ListCommands(){
   QMapIterator<QString,ConsoleCommand*> it(commands);
+  s_out<<"List of commands:\n";
   while(it.hasNext()){
       it.next();
       s_out<<"\t >"<<it.key()<<":\t";
       s_out<<it.value()->desc<<endl;
     }
+  s_out.flush();
 }
